@@ -6,10 +6,10 @@ var nameCity = document.querySelector('#cityName');
 let today = new Date().toLocaleDateString();
 var searchList = document.getElementById('cityId');
 let cities = JSON.parse(localStorage.getItem("search")) || [];
+const fiveDay = document.querySelector(".tile")
 
 
-
-
+// display today weather
 
 var currentForecast = function (data) {
 
@@ -17,6 +17,7 @@ var currentForecast = function (data) {
     var humidityEl = document.querySelector('#humidity');
     var windEl = document.querySelector('#wind-speed');
     var cityname = document.querySelector('#city-name');
+    console.log(data)
 
 
 
@@ -27,37 +28,48 @@ var currentForecast = function (data) {
 }
 
 var fivedayForecast = function (data) {
+    fiveDay.innerHTML = ""
 
+    for (var i = 7; i < data.list.length; i = i + 8) {
+        const forecast = data.list[i];
 
-    for (var i = 0; i < data.list.length; i = i + 8) {
-        console.log(data.list[i])
-    }
-
+        fiveDay.insertAdjacentHTML("beforeend", `
+        <div class="tile is-parent">
+            <article class="tile is-child box">
+                <p id ="date" id="day1">${forecast.dt_txt}</p>
+                <p id="temperature">Temp: ${forecast.main.temp} °F </p>
+                <p id="wind">Wind: ${forecast.wind.speed} km/h </p>
+                <p id="humidity">Humidity: ${forecast.main.humidity} % </p>
+            </article>
+        </div>`)
+   }
 }
 
+// display searched cities history
 const renderCityList = (cities) => {
     searchList.innerHTML = "";
-   cities.map((city) => searchList.insertAdjacentHTML("afterbegin", `<li class="searchedCities">${city}</li>`))
+    cities.map((city) => searchList.insertAdjacentHTML("afterbegin", `<li class="searchedCities">${city}</li>`))
 }
 
 
-const cityWeather = function (city) {
+// api fetch
+const cityWeather = async function (city) {
     var apiKey = 'c8be904ec04597163b07ca4fa7a4b984';
     var apiUrl = "https://api.openweathermap.org/data/2.5/forecast?q=" + city + "&appid=" + apiKey + "&units=metric";
 
 
-    fetch(apiUrl).then(function (response) {
+    const data = await fetch(apiUrl).then(function (response) {
         return response.json()
-    }).then(function (data) {
-        currentForecast(data);
-        fivedayForecast(data);
     })
+    // console.log(data.list[0].city.name)
+    currentForecast(data);
+    fivedayForecast(data);
+
 
 
 };
 
-
-//GET 5 DAY WEATHER
+//save to local storage
 button.addEventListener("click", function () {
     const searchHistory = nameCity.value.toUpperCase();
     cityWeather(searchHistory)
@@ -72,5 +84,3 @@ button.addEventListener("click", function () {
 
 })
 renderCityList(cities);
-
-
