@@ -3,7 +3,13 @@ var weatherContainer = document.querySelector('#container');
 var currentWeather = document.querySelector('#currentWeather');
 var button = document.querySelector('.search');
 var nameCity = document.querySelector('#cityName');
-let today = new Date().toLocaleDateString()
+let today = new Date().toLocaleDateString();
+var searchList = document.getElementById('cityId');
+let cities = JSON.parse(localStorage.getItem("search")) || [];
+
+
+
+
 
 var currentForecast = function (data) {
 
@@ -11,7 +17,7 @@ var currentForecast = function (data) {
     var humidityEl = document.querySelector('#humidity');
     var windEl = document.querySelector('#wind-speed');
     var cityname = document.querySelector('#city-name');
-    
+
 
 
     cityname.textContent = data.city.name + " " + "Today: " + today;
@@ -26,11 +32,18 @@ var fivedayForecast = function (data) {
     for (var i = 0; i < data.list.length; i = i + 8) {
         console.log(data.list[i])
     }
+
 }
 
-var cityWeather = function () {
+const renderCityList = () => {
+
+    cities.map((city) => searchList.insertAdjacentHTML("beforeend", `<li class="searchCity">${city}</li>`))
+}
+
+
+const cityWeather = function (city) {
     var apiKey = 'c8be904ec04597163b07ca4fa7a4b984';
-    var apiUrl = "https://api.openweathermap.org/data/2.5/forecast?q=" + nameCity.value + "&appid=" + apiKey + "&units=metric";
+    var apiUrl = "https://api.openweathermap.org/data/2.5/forecast?q=" + city + "&appid=" + apiKey + "&units=metric";
 
 
     fetch(apiUrl).then(function (response) {
@@ -40,13 +53,31 @@ var cityWeather = function () {
         fivedayForecast(data);
     })
 
+
 };
 
 
 //GET 5 DAY WEATHER
+button.addEventListener("click", function () {
+    const searchHistory = nameCity.value.toLowerCase();
+    cityWeather(searchHistory)
+    // cities.push(searchHistory);
+    if (cities.includes(searchHistory)) {
+
+    } else {
+        citiesSearch = [...cities, searchHistory];
+        localStorage.setItem("search", JSON.stringify(citiesSearch));
+
+    }
 
 
-button.addEventListener('click', cityWeather)
+    // renderseacrhEl()
+
+})
+renderCityList();
+
+
+
 
 
 
