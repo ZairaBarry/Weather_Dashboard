@@ -35,9 +35,9 @@ var fivedayForecast = function (data) {
 
 }
 
-const renderCityList = () => {
-
-    cities.map((city) => searchList.insertAdjacentHTML("beforeend", `<li class="searchCity">${city}</li>`))
+const renderCityList = (cities) => {
+    searchList.innerHTML = "";
+   cities.map((city) => searchList.insertAdjacentHTML("afterbegin", `<li class="searchedCities">${city}</li>`))
 }
 
 
@@ -59,32 +59,18 @@ const cityWeather = function (city) {
 
 //GET 5 DAY WEATHER
 button.addEventListener("click", function () {
-    const searchHistory = nameCity.value.toLowerCase();
+    const searchHistory = nameCity.value.toUpperCase();
     cityWeather(searchHistory)
-    // cities.push(searchHistory);
     if (cities.includes(searchHistory)) {
 
     } else {
-        citiesSearch = [...cities, searchHistory];
-        localStorage.setItem("search", JSON.stringify(citiesSearch));
+        cities = [...cities, searchHistory];
+        localStorage.setItem("search", JSON.stringify(cities));
 
     }
-
-
-    // renderseacrhEl()
+    renderCityList(cities);
 
 })
-renderCityList();
+renderCityList(cities);
 
 
-
-
-
-
-
-
-// var displayWeather = function (weather, searchCity) {
-//     weatherContainer.textContent = "";
-//     searchForm.textContent = "searchCity"
-// }
-// console.log(displayWeather)
