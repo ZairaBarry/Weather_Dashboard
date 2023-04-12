@@ -36,7 +36,7 @@ var fivedayForecast = function (data) {
         fiveDay.insertAdjacentHTML("beforeend", `
         <div class="tile is-parent">
             <article class="tile is-child box">
-                <p id ="date" id="day1">${forecast.dt_txt}</p>
+                <p id ="date" id="day1">${forecast.dt_txt} </p>
                 <p id="temperature">Temp: ${forecast.main.temp} °F </p>
                 <p id="wind">Wind: ${forecast.wind.speed} km/h </p>
                 <p id="humidity">Humidity: ${forecast.main.humidity} % </p>
